@@ -1,4 +1,4 @@
-# 第2回：LLMを動かして理解する②
+# 第3回：LLMを動かして理解する③
 
 ## 事前準備
 
@@ -10,8 +10,8 @@
 
 ### Colab でノートブックを開く
 
-同じ階層の [`session02_llm_basics.ipynb`](session02_llm_basics.ipynb) を Colab 上で開けるか、事前に確認してください。
+同じ階層の [`session03_llm_basics.ipynb`](session03_llm_basics.ipynb) を Colab 上で開けるか、事前に確認してください。
 
-1. GitHub 上で `session02/session02_llm_basics.ipynb` を開く
+1. GitHub 上で `session03/session03_llm_basics.ipynb` を開く
 2. ノートブック先頭の **[Open In Colab]** をクリックする。Google に未ログインの場合はログイン画面が出るので、事前準備 1 のアカウントでログインする。Colab を初めて使う場合は、利用規約の同意やウェルカム画面が出ることがあるので、表示に従って進める
-3. Colab で`session02_llm_basics.ipynb`が表示されることを確認する
+3. Colab で`session03_llm_basics.ipynb`が表示されることを確認する
