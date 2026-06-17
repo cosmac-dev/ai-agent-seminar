@@ -5,7 +5,7 @@
 > 第一回の事前準備が済んでいる場合は不要です。
 
 1. Google アカウント（Colab 使用のため）
-2. `session02_llm_basics.ipynb` を Colab で開けることを確認（下記「Colab でノートブックを開く」参照）
+2. `session03_llm_basics.ipynb` を Colab で開けることを確認（下記「Colab でノートブックを開く」参照）
 
 
 ### Colab でノートブックを開く
