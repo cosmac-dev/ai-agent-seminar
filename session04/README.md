@@ -4,9 +4,9 @@
 
 1. Git
 2. 実行環境（いずれか）
-   - ローカルの Python 3.10 以上 ＋ Jupyter、または
-   - VS Code の **Dev Containers**（下記「（オプション）Dev Container の使い方」参照）、または
-   - **Google Colab**（下記「（オプション）Google Colab で実行する」参照）
+   - ローカルの Python 3.10 以上 ＋ Jupyter（または **VS Code** Jupyter 拡張機能）
+   - **Dev Containers**（Docker 利用。ローカル環境を汚したくない場合）
+   - **Google Colab**
 
 ## 事前準備
 
@@ -30,7 +30,7 @@ cd ai-agent-seminar/session04
 
 ローカル環境を汚したくない場合は**Dev Container** を使用可能。
 
-### 前提条件
+### Dev Container の前提条件
 
 1. Docker
 2. [Visual Studio Code](https://code.visualstudio.com/) / [Cursor](https://cursor.com/)
