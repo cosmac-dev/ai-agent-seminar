@@ -1,5 +1,5 @@
 {
-  "name": "ai-agent-seminar-session04",
+  "name": "ai-agent-seminar-session05",
   "build": {
     "dockerfile": "../Dockerfile",
     "context": ".."
@@ -7,7 +7,7 @@
   "features": {
     "ghcr.io/devcontainers/features/git:1": {}
   },
-  "workspaceFolder": "/workspaces/ai-agent-seminar/session04",
+  "workspaceFolder": "/workspaces/ai-agent-seminar/session05",
   "customizations": {
     "vscode": {
       "settings": {
@@ -25,10 +25,7 @@
     }
   },
   "containerEnv": {
-    "PYTHONPATH": "/workspaces/ai-agent-seminar/session04/src"
+    "PYTHONPATH": "/workspaces/ai-agent-seminar/session05/src"
   },
-  /*"remoteEnv": {
-    "OPENAI_API_KEY": "${localEnv:OPENAI_API_KEY}"
-  },*/
-  "postCreateCommand": "python -m pip install --upgrade pip && python -m pip install -r /workspaces/ai-agent-seminar/.devcontainer/requirements.txt"
+  "postCreateCommand": "python -m pip install --upgrade pip && python -m pip install -e ."
 }

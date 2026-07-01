@@ -25,6 +25,10 @@ htmlcov/
 # Jupyter
 .ipynb_checkpoints/
 
+# LangGraph (dev server runtime data)
+.langgraph_api/
+*.pckl
+
 # Secrets
 .env
 .env.*
@@ -44,3 +48,6 @@ desktop.ini
 .vscode/
 *.swp
 *.swo
+
+# Accidental shell redirect artifacts (e.g. `pip install "pkg>=1.2.3"` on PowerShell)
+=*
