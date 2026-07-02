@@ -41,8 +41,8 @@ cd ai-agent-seminar/session05
 
 `src/mnemonic_agent` は、Notebookで扱った短期記憶と長期記憶を搭載した AI エージェントのパッケージ版。
 
-- **短期記憶**: `session_id`（スレッド）ごとに会話履歴を checkpointer で永続化する。
-- **長期記憶**: `user_id` ごとに恒常的な事実を Store へ抽出・検証して保存し、
+- **短期記憶**: `session_id`（スレッド）ごとに会話履歴を checkpointer で永続化
+- **長期記憶**: `user_id` ごとに恒常的な事実を Store へ抽出・検証して保存
 
 ### ライブラリとして使用
 
