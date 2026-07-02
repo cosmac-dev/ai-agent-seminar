@@ -1,16 +1,41 @@
 # 第5回: Memory Management
 
+## 前提条件
+
+1. Git
+2. 実行環境（いずれか）
+   - ローカルの Python 3.10 以上 ＋ Jupyter（または **VS Code** Jupyter 拡張機能）
+   - **Dev Containers**（Docker 利用。ローカル環境を汚したくない場合）
+   - **Google Colab**
 
 ## 事前準備
 
+### リポジトリのクローン
+
+ローカルにリポジトリを取得
+
 ```bash
+git clone https://github.com/cosmac-dev/ai-agent-seminar.git
 cd ai-agent-seminar/session05
-python -m pip install -e .
 ```
+
+> 既にリポジトリをクローン済みの場合は、最新の状態に更新
+>
+> ```bash
+> cd ai-agent-seminar
+> git pull
+> ```
+
+### LangSmithのアカウント作成（任意）
+
+> LangGraphサーバーのWeb UIを使用する場合に使用する
+
+1. <https://smith.langchain.com/>にアクセスしてSign Up
+2. ブラウザでログインしておく
 
 ## Notebook
 
-[`session05_memory.ipynb`](session05_memory.ipynb)
+- [`session05_memory.ipynb`](session05_memory.ipynb)
 
 ## パッケージ: `mnemonic-agent`
 
@@ -31,35 +56,25 @@ print(agent.run("私について覚えていることは？", user_id="user-001"
 print(agent.recall("user-001"))  # 保存済みの長期記憶を一覧
 ```
 
-
-
-
 ### LangGraph Server として起動
 
-> 実行には `OPENAI_API_KEY` が必要です。
-```bash
-python -m pip install -e ".[server]"   # langgraph-cli を含める
-echo "OPENAI_API_KEY=sk-..." > .env      # langgraph.json が参照する
-langgraph dev                            # http://127.0.0.1:2024 （Studio 付き）
-```
+1. プロジェクトルートに`.env`ファイルを作成し、`OPENAI_API_KEY`を設定
+   ```bash
+   cho "OPENAI_API_KEY=sk-..." > .env 
+   ```
+2. langgraph-cliをインストール
+    ```bash
+    pip install -e ".[server]"
+    ```
+3. 起動
+    ```bash
+    langgraph dev
+    # Colabの場合はlanggraph dev --tunnel
+    ```
+4. ブラウザで<http://127.0.0.1:2024>にアクセス
+   > Colabの場合はターミナルに表示されたWeb UIのリンクをクリック
 
-グラフとストア設定は [`langgraph.json`](langgraph.json) で宣言しています。長期記憶の
+グラフとストア設定は [`langgraph.json`](langgraph.json) で宣言する。長期記憶の
 セマンティック検索設定（埋め込みモデル・次元・対象フィールド）は同ファイルの `store.index`
 で定義するため、サーバー用エントリポイント（`server.py:make_graph`）は
-**checkpointer / store を渡さずに** コンパイルします（サーバーが自動注入）。
-
-呼び出し例（`langgraph-sdk`）:
-
-```python
-from langgraph_sdk import get_client
-
-client = get_client(url="http://127.0.0.1:2024")
-thread = await client.threads.create()  # 短期記憶（スレッド）はサーバーが管理
-await client.runs.wait(
-    thread["thread_id"],
-    "mnemonic_agent",
-    input={"content": "覚えて: 私はPythonが好きです"},  # 入力はユーザーメッセージ本文のみ
-    context={"user_id": "user-001"},  # 長期記憶の名前空間（Context.user_id）
-)
-```
-
+**checkpointer / store を渡さずに** コンパイル（サーバーが自動注入）。
