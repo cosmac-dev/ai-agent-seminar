@@ -20,8 +20,8 @@
       ]
     }
   },
-  /*"remoteEnv": {
-    "OPENAI_API_KEY": "${localEnv:OPENAI_API_KEY}"
-  },*/
+  "containerEnv": {
+    "OPENAI_API_KEY": "${localEnv:CMC_OPENAI_API_KEY}"
+  },
   "postCreateCommand": "python -m pip install --upgrade pip && python -m pip install -r .devcontainer/requirements.txt"
 }
