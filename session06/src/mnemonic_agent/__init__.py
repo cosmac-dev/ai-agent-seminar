@@ -16,7 +16,7 @@ from .memory import (
     validate_memory,
     write_memory,
 )
-from .state import AgentState, Context, InputState
+from .state import DEFAULT_MODEL, AgentState, Context, InputState, OpenAIModelName
 from .tools import DEFAULT_TOOLS, calculator, current_datetime
 
 __all__ = [
@@ -24,6 +24,7 @@ __all__ = [
     "AgentState",
     "InputState",
     "Context",
+    "OpenAIModelName",
     "build_graph",
     "build_state_graph",
     "make_call_model",
@@ -38,6 +39,7 @@ __all__ = [
     "current_datetime",
     "DEFAULT_TOOLS",
     "DEFAULT_SYSTEM_PROMPT",
+    "DEFAULT_MODEL",
 ]
 
 __version__ = "0.1.0"

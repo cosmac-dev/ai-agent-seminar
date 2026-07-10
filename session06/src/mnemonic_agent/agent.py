@@ -3,15 +3,14 @@ from __future__ import annotations
 from typing import Any, Iterator
 
 from langchain_core.language_models import BaseChatModel
-from langchain_core.messages import AIMessage
+from langchain_core.messages import AIMessage, HumanMessage
 from langgraph.checkpoint.base import BaseCheckpointSaver
 from langgraph.store.base import BaseStore
 from langgraph.store.memory import InMemoryStore
 
 from .graph import DEFAULT_SYSTEM_PROMPT, build_graph
-from .state import Context
+from .state import DEFAULT_MODEL, Context, OpenAIModelName
 
-DEFAULT_MODEL = "gpt-4o-mini"
 DEFAULT_EMBEDDING_MODEL = "text-embedding-3-small"
 DEFAULT_EMBEDDING_DIMS = 1536
 
@@ -54,8 +53,10 @@ class Agent:
         system_prompt: str = DEFAULT_SYSTEM_PROMPT,
         checkpointer: BaseCheckpointSaver | None = None,
         store: BaseStore | None = None,
+        call_model_name: OpenAIModelName = DEFAULT_MODEL,
     ) -> None:
         self.model = model or _default_model()
+        self.call_model_name = call_model_name
         self.store = store or _default_store()
         self.graph = build_graph(
             self.model,
@@ -68,18 +69,27 @@ class Agent:
     def _config(self, session_id: str) -> dict[str, Any]:
         return {"configurable": {"thread_id": session_id}}
 
+    def _context(
+        self,
+        user_id: str,
+        *,
+        model: OpenAIModelName | None = None,
+    ) -> Context:
+        return Context(user_id=user_id, model=model or self.call_model_name)
+
     def run(
         self,
         query: str,
         *,
         user_id: str = "default",
         session_id: str = "default",
+        model: OpenAIModelName | None = None,
     ) -> str:
         """1 ターン実行し、アシスタントの最終回答テキストを返す。"""
         result = self.graph.invoke(
-            {"content": query},
+            {"messages": [HumanMessage(content=query)]},
             config=self._config(session_id),
-            context=Context(user_id=user_id),
+            context=self._context(user_id, model=model),
         )
         for message in reversed(result["messages"]):
             if isinstance(message, AIMessage) and message.content:
@@ -93,12 +103,13 @@ class Agent:
         user_id: str = "default",
         session_id: str = "default",
         stream_mode: str = "updates",
+        model: OpenAIModelName | None = None,
     ) -> Iterator[Any]:
         """グラフの実行を逐次ストリームする（node ごとの更新を確認したいとき用）。"""
         yield from self.graph.stream(
-            {"content": query},
+            {"messages": [HumanMessage(content=query)]},
             config=self._config(session_id),
-            context=Context(user_id=user_id),
+            context=self._context(user_id, model=model),
             stream_mode=stream_mode,
         )
 

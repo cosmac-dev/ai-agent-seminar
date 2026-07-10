@@ -23,26 +23,17 @@ def _namespace(user_id: str) -> tuple[str, str]:
 def load_memory(state: AgentState, runtime: Runtime[Context]) -> AgentState:
     """長期記憶を Store から読む（グラフの入口 node）。
 
-    入力スキーマ（InputState）は `content` のみのため、まず content を
-    HumanMessage として会話履歴に取り込む。そのうえで、現在のユーザー入力に
-    意味的に関連する記憶だけをセマンティック検索で取得する。
+    現在のユーザー入力に意味的に関連する記憶だけをセマンティック検索で取得する。
     埋め込み index が無い Store でも動くよう、失敗時は全件取得にフォールバックする。
     """
     namespace = _namespace(runtime.context.user_id)
 
-    # content を今ターンのユーザー発話として messages に反映する
-    new_messages = []
-    content = str(state.get("content") or "").strip()
-    if content:
-        new_messages.append(HumanMessage(content=content))
-
-    # 検索クエリ: 今ターンの content を優先し、無ければ直近のユーザー発話を使う
-    query = content
-    if not query:
-        for msg in reversed(state["messages"]):
-            if isinstance(msg, HumanMessage) and msg.content:
-                query = str(msg.content)
-                break
+    # 直近のユーザー発話を検索クエリにする
+    query = ""
+    for msg in reversed(state["messages"]):
+        if isinstance(msg, HumanMessage) and msg.content:
+            query = str(msg.content)
+            break
 
     if query:
         try:
@@ -52,10 +43,7 @@ def load_memory(state: AgentState, runtime: Runtime[Context]) -> AgentState:
     else:
         items = runtime.store.search(namespace)
 
-    result: AgentState = {"memories": [item.value["text"] for item in items]}
-    if new_messages:
-        result["messages"] = new_messages
-    return result
+    return {"memories": [item.value["text"] for item in items]}
 
 
 class MemoryItem(BaseModel):

@@ -6,6 +6,7 @@ from langgraph.checkpoint.base import BaseCheckpointSaver
 from langgraph.checkpoint.memory import InMemorySaver
 from langgraph.graph import END, START, StateGraph
 from langgraph.prebuilt import ToolNode, tools_condition
+from langgraph.runtime import Runtime
 from langgraph.store.base import BaseStore
 from langgraph.store.memory import InMemoryStore
 
@@ -15,7 +16,7 @@ from .memory import (
     validate_memory,
     write_memory,
 )
-from .state import AgentState, Context, InputState
+from .state import DEFAULT_MODEL, AgentState, Context, InputState
 from .tools import DEFAULT_TOOLS
 
 DEFAULT_SYSTEM_PROMPT = (
@@ -24,11 +25,21 @@ DEFAULT_SYSTEM_PROMPT = (
 )
 
 
-def make_call_model(model: BaseChatModel, tools, system_prompt: str):
-    """長期記憶をプロンプトに差し込む ReAct 用 LLM node を生成する。"""
-    model_with_tools = model.bind_tools(tools)
+def _chat_model(model_name: str) -> BaseChatModel:
+    """Assistant / Context で選ばれたモデル名から ChatOpenAI を作る。"""
+    from langchain_openai import ChatOpenAI
 
-    def call_model(state: AgentState) -> AgentState:
+    return ChatOpenAI(model=model_name or DEFAULT_MODEL, temperature=0)
+
+
+def make_call_model(tools, system_prompt: str):
+    """長期記憶をプロンプトに差し込む ReAct 用 LLM node を生成する。
+
+    使用モデルはコンパイル時ではなく、実行時の `runtime.context.model`
+    （Assistant 設定）から決める。
+    """
+
+    def call_model(state: AgentState, runtime: Runtime[Context]) -> AgentState:
         memory_text = "\n".join(f"- {m}" for m in state.get("memories", []))
         if not memory_text:
             memory_text = "なし"
@@ -36,6 +47,7 @@ def make_call_model(model: BaseChatModel, tools, system_prompt: str):
         system = SystemMessage(
             content=f"{system_prompt}\n\n参考になる長期記憶:\n{memory_text}"
         )
+        model_with_tools = _chat_model(runtime.context.model).bind_tools(tools)
         response = model_with_tools.invoke([system] + state["messages"])
         return {"messages": [response]}
 
@@ -53,9 +65,12 @@ def build_state_graph(
     ライブラリ用途と LangGraph Server 用途で共有する“定義の単一の源”。
     コンパイル（＝永続化の差し込み）はここでは行わない。
 
-    入力スキーマ（InputState）は `content`（ユーザーメッセージ本文）のみ。
-    content から messages への変換は先頭 node の load_memory が担い、
-    グラフ構造（node / edge）は変更しない。
+    入力スキーマ（InputState）は `messages`（会話履歴）。
+    ユーザー発話を HumanMessage として渡し、checkpointer がスレッドごとの
+    会話履歴を保持する。
+
+    call_model の OpenAI モデルは `Context.model`（Assistant 設定）で選択する。
+    `model` 引数は extract_memory など、設定対象外のノード用。
 
     フロー:
         START → load_memory → call_model ⇄ tools
@@ -63,7 +78,7 @@ def build_state_graph(
     """
     tools = tools if tools is not None else DEFAULT_TOOLS
 
-    call_model = make_call_model(model, tools, system_prompt)
+    call_model = make_call_model(tools, system_prompt)
     extract_memory = make_extract_memory(model)
 
     builder = StateGraph(AgentState, input_schema=InputState, context_schema=Context)

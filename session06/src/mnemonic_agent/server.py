@@ -13,8 +13,7 @@ from __future__ import annotations
 from langchain_core.language_models import BaseChatModel
 
 from .graph import DEFAULT_SYSTEM_PROMPT, build_state_graph
-
-DEFAULT_MODEL = "gpt-4o-mini"
+from .state import DEFAULT_MODEL
 
 
 def _default_model() -> BaseChatModel:

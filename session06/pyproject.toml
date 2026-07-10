@@ -9,6 +9,7 @@ description = "AI agent seminar session 06: 短期・長期記憶を搭載した
 requires-python = ">=3.10"
 dependencies = [
     "langgraph>=0.2",
+    "langchain>=0.3.9",
     "langchain-core>=0.3",
     "langchain-openai>=0.2",
     "pydantic>=2",
