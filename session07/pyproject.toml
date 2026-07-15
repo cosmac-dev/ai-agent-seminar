@@ -1,0 +1,24 @@
+[build-system]
+requires = ["setuptools>=68"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "rag-agent-session07"
+version = "0.1.0"
+description = "AI agent seminar session 07: RAGツール・短期記憶・長期記憶を搭載したAIエージェント"
+requires-python = ">=3.10"
+dependencies = [
+    "langgraph>=0.2",
+    "langchain>=0.3.9",
+    "langchain-core>=0.3",
+    "langchain-openai>=0.2",
+    "langchain-text-splitters>=0.3",
+    "pydantic>=2",
+    "numpy>=1.24",
+]
+
+[project.optional-dependencies]
+server = ["langgraph-cli[inmem]>=0.2"]
+
+[tool.setuptools.packages.find]
+where = ["src"]
