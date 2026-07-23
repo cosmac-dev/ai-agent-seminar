@@ -1,0 +1,32 @@
+{
+  "name": "ai-agent-seminar-session08",
+  "build": {
+    "dockerfile": "../Dockerfile",
+    "context": ".."
+  },
+  "features": {
+    "ghcr.io/devcontainers/features/git:1": {}
+  },
+  "workspaceFolder": "/workspaces/ai-agent-seminar/session08",
+  "customizations": {
+    "vscode": {
+      "settings": {
+        "python.defaultInterpreterPath": "/usr/local/bin/python",
+        "python.analysis.extraPaths": [
+          "${workspaceFolder}/src"
+        ],
+        "jupyter.notebookFileRoot": "${workspaceFolder}"
+      },
+      "extensions": [
+        "ms-python.python",
+        "ms-python.vscode-pylance",
+        "ms-toolsai.jupyter"
+      ]
+    }
+  },
+  "containerEnv": {
+    "PYTHONPATH": "/workspaces/ai-agent-seminar/session08/src",
+    "OPENAI_API_KEY": "${localEnv:CMC_OPENAI_API_KEY}"
+  }
+  //"postCreateCommand": "python -m pip install --upgrade pip && python -m pip install -e ."
+}

@@ -1,0 +1,15 @@
+{
+  "dependencies": ["."],
+  "graphs": {
+    "practical_agent": "practical_agent.server:make_graph",
+    "ingest": "practical_agent.server:make_ingest_graph"
+  },
+  "env": ".env",
+  "store": {
+    "index": {
+      "embed": "openai:text-embedding-3-small",
+      "dims": 1536,
+      "fields": ["text"]
+    }
+  }
+}
