@@ -1,8 +1,8 @@
-# 第9回: Human-in-the-Loop, Sandbox
+# 第9回: Sandbox
 
 ## Notebook
 
-- [`session09_hitl_sbx.ipynb`](session09_hitl_sbx.ipynb)
+- [`session10_sbx.ipynb`](session10_sbx.ipynb)
 
 OpenAI API を利用するセルには `OPENAI_API_KEY`、Web 検索には `TAVILY_API_KEY` が必要です。
 必要な依存パッケージは、ノートブック冒頭のセットアップセルでインストールします。
@@ -50,7 +50,7 @@ GUARDED_AGENT_EXECUTION_POLICY=docker
 
 ```bash
 git clone https://github.com/cosmac-dev/ai-agent-seminar.git
-cd ai-agent-seminar/session08
+cd ai-agent-seminar/session10
 ```
 
 > 既にリポジトリをクローン済みの場合は、最新の状態に更新
@@ -87,12 +87,12 @@ export CMC_DOCKER_SOCKET="/run/user/$(id -u)/docker.sock"     # rootless Docker
 ```
 
 コンテナ作成時に
-[`post-create.sh`](../.devcontainer/session09/post-create.sh) が Docker の疎通を確認し、
+[`post-create.sh`](../.devcontainer/session10/post-create.sh) が Docker の疎通を確認し、
 `python:3.12-alpine` を取得します。失敗してもコンテナ作成は中断しないため、必要に応じて
 次のコマンドで再実行できます。
 
 ```bash
-bash /workspaces/ai-agent-seminar/.devcontainer/session09/post-create.sh
+bash /workspaces/ai-agent-seminar/.devcontainer/session10/post-create.sh
 ```
 
 動作確認:
