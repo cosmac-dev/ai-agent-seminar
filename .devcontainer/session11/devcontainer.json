@@ -1,0 +1,46 @@
+{
+  "name": "ai-agent-seminar-session11",
+  // 共有の ../Dockerfile ではなく session11 専用の Dockerfile を使う（apt の修正を含む）
+  "build": {
+    "dockerfile": "Dockerfile",
+    "context": ".."
+  },
+  "features": {
+    "ghcr.io/devcontainers/features/git:1": {},
+    // Docker outside of Docker: ホストの Docker デーモンを共有し、コンテナ内に docker CLI を導入する。
+    "ghcr.io/devcontainers/features/docker-outside-of-docker:1": {}
+  },
+  // ホストのソケットを feature が参照する /var/run/docker-host.sock へ bind mount する。
+  // macOS / Windows（Docker Desktop）/ WSL / Linux は既定の /var/run/docker.sock で動作する。
+  // rootless Docker など別パスの場合は、ホストで CMC_DOCKER_SOCKET を設定する。
+  "mounts": [
+    "source=${localEnv:CMC_DOCKER_SOCKET:/var/run/docker.sock},target=/var/run/docker-host.sock,type=bind"
+  ],
+  "workspaceFolder": "/workspaces/ai-agent-seminar/session11",
+  "customizations": {
+    "vscode": {
+      "settings": {
+        "python.defaultInterpreterPath": "/usr/local/bin/python",
+        "python.analysis.extraPaths": [
+          "${workspaceFolder}/src"
+        ],
+        "jupyter.notebookFileRoot": "${workspaceFolder}"
+      },
+      "extensions": [
+        "ms-python.python",
+        "ms-python.vscode-pylance",
+        "ms-toolsai.jupyter"
+      ]
+    }
+  },
+  "containerEnv": {
+    "PYTHONPATH": "/workspaces/ai-agent-seminar/session11/src",
+    "OPENAI_API_KEY": "${localEnv:CMC_OPENAI_API_KEY}",
+    "TAVILY_API_KEY": "${localEnv:CMC_TAVILY_API_KEY}"
+  },
+  // bind mount を伴う docker run はコンテナ内のパスではなくホストのパスを指定する必要がある
+  "remoteEnv": {
+    "LOCAL_WORKSPACE_FOLDER": "${localWorkspaceFolder}"
+  },
+  "postCreateCommand": "bash /workspaces/ai-agent-seminar/.devcontainer/session11/post-create.sh"
+}
