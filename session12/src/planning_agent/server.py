@@ -5,14 +5,14 @@ from __future__ import annotations
 import os
 from typing import TypedDict, cast
 
-from guarded_agent.knowledge import KnowledgeBase
-from guarded_agent.sandbox import DEFAULT_EXECUTION_POLICY, ExecutionPolicyName
-from guarded_agent.state import DEFAULT_MODEL
-from guarded_agent.tools import DEFAULT_TOOLS, make_search_tool
 from langchain_core.language_models import BaseChatModel
 from langgraph.graph import END, START, StateGraph
 
 from .graph import build_state_graph
+from .knowledge import KnowledgeBase
+from .sandbox import DEFAULT_EXECUTION_POLICY, ExecutionPolicyName
+from .state import DEFAULT_MODEL
+from .tools import DEFAULT_TOOLS, make_search_tool
 
 _knowledge_base: KnowledgeBase | None = None
 

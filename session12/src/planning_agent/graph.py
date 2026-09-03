@@ -3,16 +3,6 @@ from __future__ import annotations
 from collections.abc import Sequence
 from typing import Literal
 
-from guarded_agent.graph import DEFAULT_SYSTEM_PROMPT, make_guarded_agent
-from guarded_agent.memory import (
-    load_memory,
-    make_extract_memory,
-    validate_memory,
-    write_memory,
-)
-from guarded_agent.sandbox import DEFAULT_EXECUTION_POLICY, ExecutionPolicyName
-from guarded_agent.state import Context
-from guarded_agent.tools import DEFAULT_TOOLS
 from langchain_core.language_models import BaseChatModel
 from langchain_core.messages import AIMessage, HumanMessage
 from langchain_core.tools import BaseTool
@@ -24,8 +14,17 @@ from langgraph.store.base import BaseStore
 from langgraph.store.memory import InMemoryStore
 from langgraph.types import interrupt
 
+from .executor import DEFAULT_SYSTEM_PROMPT, make_guarded_agent
+from .memory import (
+    load_memory,
+    make_extract_memory,
+    validate_memory,
+    write_memory,
+)
 from .models import GoalSpec, MonitorDecision, StepCritique, WorkPlan
-from .state import PlanningAgentState, PlanningInputState
+from .sandbox import DEFAULT_EXECUTION_POLICY, ExecutionPolicyName
+from .state import Context, PlanningAgentState, PlanningInputState
+from .tools import DEFAULT_TOOLS
 
 
 def _bullet_lines(items: list[str]) -> str:
