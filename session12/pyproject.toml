@@ -1,0 +1,27 @@
+[build-system]
+requires = ["setuptools>=68"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "planning-agent"
+version = "0.1.0"
+description = "AI agent seminar session 12: Planning・Monitoring・HITL・Sandboxを搭載したAIエージェント"
+requires-python = ">=3.10"
+dependencies = [
+    "langgraph>=1.2",
+    "langchain>=1.3",
+    "langchain-core>=0.3",
+    "langchain-openai>=0.2",
+    "langchain-community>=0.3",
+    "langchain-experimental>=0.3",
+    "langchain-text-splitters>=0.3",
+    "langchain-tavily>=0.1",
+    "pydantic>=2",
+    "numpy>=1.24",
+]
+
+[project.optional-dependencies]
+server = ["langgraph-cli[inmem]>=0.2"]
+
+[tool.setuptools.packages.find]
+where = ["src"]
