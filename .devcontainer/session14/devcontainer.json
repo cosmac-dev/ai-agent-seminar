@@ -1,0 +1,37 @@
+{
+  "name": "ai-agent-seminar-session14",
+  // a2a_mcp サンプルは Python 3.13 以上と uv（uv.lock）を前提とする
+  "build": {
+    "dockerfile": "Dockerfile",
+    "context": ".."
+  },
+  "features": {
+    "ghcr.io/devcontainers/features/git:1": {}
+  },
+  "workspaceFolder": "/workspaces/ai-agent-seminar/session14",
+  "remoteUser": "vscode",
+  "containerUser": "vscode",
+  "customizations": {
+    "vscode": {
+      "settings": {
+        // post-create.sh の uv sync で作る session14/.venv をカーネルに使う
+        "python.defaultInterpreterPath": "${workspaceFolder}/.venv/bin/python",
+        "jupyter.notebookFileRoot": "${workspaceFolder}"
+      },
+      "extensions": [
+        "ms-python.python",
+        "ms-python.vscode-pylance",
+        "ms-toolsai.jupyter"
+      ]
+    }
+  },
+  "remoteEnv": {
+    "OPENAI_API_KEY": "${localEnv:CMC_OPENAI_API_KEY}",
+    "GOOGLE_PLACES_API_KEY": "${localEnv:CMC_GOOGLE_PLACES_API_KEY}",
+    "UV_LINK_MODE": "copy"
+  },
+  // 起動時に準備を待ち、起動済みコンテナへの再接続時も不足・変更を同期する。
+  "postStartCommand": "bash /workspaces/ai-agent-seminar/.devcontainer/session14/post-create.sh",
+  "postAttachCommand": "bash /workspaces/ai-agent-seminar/.devcontainer/session14/post-create.sh",
+  "waitFor": "postStartCommand"
+}
