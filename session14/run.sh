@@ -12,10 +12,6 @@ set -Eeuo pipefail
 WORK_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
 # Directory to store log files for background processes
 LOG_DIR="${TMPDIR:-/tmp}/a2a-mcp-logs"
-ENV_ARGS=()
-if [[ -f "$WORK_DIR/.env" ]]; then
-    ENV_ARGS=(--env-file "$WORK_DIR/.env")
-fi
 MODE="${1:-client}"
 if [[ "$MODE" != "client" && "$MODE" != "--serve" ]]; then
     echo "Usage: $0 [--serve]"
@@ -101,32 +97,32 @@ echo "Starting servers and agents in the background..."
 
 # 1. Start MCP Server
 echo "-> Starting MCP Server (Port: 10100)... Log: $LOG_DIR/mcp_server.log"
-uv run "${ENV_ARGS[@]}" a2a-mcp --run mcp-server --transport sse --port 10100 > "$LOG_DIR/mcp_server.log" 2>&1 &
+uv run a2a-mcp --run mcp-server --transport sse --port 10100 > "$LOG_DIR/mcp_server.log" 2>&1 &
 pids+=($!)
 
 # 2. Start Orchestrator Agent
 echo "-> Starting Orchestrator Agent (Port: 10101)... Log: $LOG_DIR/orchestrator_agent.log"
-uv run "${ENV_ARGS[@]}" src/a2a_mcp/agents/ --agent-card agent_cards/orchestrator_agent.json --port 10101 > "$LOG_DIR/orchestrator_agent.log" 2>&1 &
+uv run src/a2a_mcp/agents/ --agent-card agent_cards/orchestrator_agent.json --port 10101 > "$LOG_DIR/orchestrator_agent.log" 2>&1 &
 pids+=($!)
 
 # 3. Start Planner Agent
 echo "-> Starting Planner Agent (Port: 10102)... Log: $LOG_DIR/planner_agent.log"
-uv run "${ENV_ARGS[@]}" src/a2a_mcp/agents/ --agent-card agent_cards/planner_agent.json --port 10102 > "$LOG_DIR/planner_agent.log" 2>&1 &
+uv run src/a2a_mcp/agents/ --agent-card agent_cards/planner_agent.json --port 10102 > "$LOG_DIR/planner_agent.log" 2>&1 &
 pids+=($!)
 
 # 4. Start Airline Ticketing Agent
 echo "-> Starting Airline Agent (Port: 10103)... Log: $LOG_DIR/airline_agent.log"
-uv run "${ENV_ARGS[@]}" src/a2a_mcp/agents/ --agent-card agent_cards/air_ticketing_agent.json --port 10103 > "$LOG_DIR/airline_agent.log" 2>&1 &
+uv run src/a2a_mcp/agents/ --agent-card agent_cards/air_ticketing_agent.json --port 10103 > "$LOG_DIR/airline_agent.log" 2>&1 &
 pids+=($!)
 
 # 5. Start Hotel Reservations Agent
 echo "-> Starting Hotel Agent (Port: 10104)... Log: $LOG_DIR/hotel_agent.log"
-uv run "${ENV_ARGS[@]}" src/a2a_mcp/agents/ --agent-card agent_cards/hotel_booking_agent.json --port 10104 > "$LOG_DIR/hotel_agent.log" 2>&1 &
+uv run src/a2a_mcp/agents/ --agent-card agent_cards/hotel_booking_agent.json --port 10104 > "$LOG_DIR/hotel_agent.log" 2>&1 &
 pids+=($!)
 
 # 6. Start Car Rental Reservations Agent
 echo "-> Starting Car Rental Agent (Port: 10105)... Log: $LOG_DIR/car_rental_agent.log"
-uv run "${ENV_ARGS[@]}" src/a2a_mcp/agents/ --agent-card agent_cards/car_rental_agent.json --port 10105 > "$LOG_DIR/car_rental_agent.log" 2>&1 &
+uv run src/a2a_mcp/agents/ --agent-card agent_cards/car_rental_agent.json --port 10105 > "$LOG_DIR/car_rental_agent.log" 2>&1 &
 pids+=($!)
 
 echo ""
@@ -161,7 +157,7 @@ echo ""
 
 # 7. Start the CLI client in the foreground.
 # The script will pause here until this command completes.
-uv run "${ENV_ARGS[@]}" src/a2a_mcp/mcp/client.py --transport sse --resource "resource://agent_cards/list" --find_agent "I would like to plan a trip to France."
+uv run src/a2a_mcp/mcp/client.py --transport sse --resource "resource://agent_cards/list" --find_agent "I would like to plan a trip to France."
 
 echo ""
 echo "---------------------------------------------------------"

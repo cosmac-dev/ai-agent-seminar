@@ -21,7 +21,6 @@ if ! uv sync --locked; then
   exit 1
 fi
 
-
-if [[ ! -f .env ]]; then
-  echo "[session14] session14/.env がありません。uv run --env-file .env を使う前に OPENAI_API_KEY を記載した .env を作成してください。" >&2
+if [[ ! -f .env && -z "${OPENAI_API_KEY:-}" ]]; then
+  echo "[session14] OPENAI_API_KEY が未設定で、session14/.env もありません。API を使う前に、ホストの CMC_OPENAI_API_KEY または session14/.env にキーを設定してください。.env は Dynaconf が自動で読み込みます。" >&2
 fi

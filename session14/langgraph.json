@@ -2,6 +2,5 @@
   "dependencies": ["."],
   "graphs": {
     "a2a_demo": "a2a_mcp.studio_graph:make_graph"
-  },
-  "env": ".env"
+  }
 }

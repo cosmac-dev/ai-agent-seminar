@@ -1,5 +1,9 @@
 """Convenience methods to start servers."""
 
+from a2a_mcp.common.config import init_environment
+
+init_environment()
+
 import click
 
 from a2a_mcp.mcp import server

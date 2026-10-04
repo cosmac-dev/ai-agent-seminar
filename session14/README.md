@@ -86,6 +86,21 @@ Colab での実サービス接続は未検証です。
 OPENAI_API_KEY=取得したAPIキー
 ```
 
+すべての Python 起動経路は、共通の Dynaconf 初期化でカレントディレクトリの `.env` を読み込みます。
+コマンドと Notebook は `session14/` を作業ディレクトリとして実行してください。
+既定では `.env` が既存の環境変数（空文字を含む）より優先されます。
+既存の環境変数を優先する場合は、起動前に Dynaconf 標準の設定を指定します。
+
+```bash
+export DOTENV_OVERRIDE_FOR_DYNACONF=false
+bash run.sh --serve
+```
+
+この設定は直接 CLI・Agent・MCP・Studio・Notebook でも共通です。
+`false` のときは空文字も既存値として保持するため、空の `OPENAI_API_KEY` は有効なキーとして扱われません。
+`.env` は任意で、ファイルがない場合は既存の環境変数を使います。
+設定を変更した場合は、実行中のサーバーと Notebook のカーネルを再起動します。
+
 キーを Notebook や Git に保存しないでください。
 モデルを変更する場合は、同じファイルに次の項目を追加します。
 
@@ -102,8 +117,9 @@ OPENAI_API_KEY=取得したAPIキー
 [`post-create.sh`](../.devcontainer/session14/post-create.sh) が `uv sync --locked` を実行します。
 
 ホストの `CMC_OPENAI_API_KEY` はコンテナ内の `OPENAI_API_KEY` へ引き継がれます。
-この方法でキーを渡す場合、`.env` に同じキーを書く必要はありませんが、
-LangGraph の設定が参照するため `.env` 自体は作成してください。内容は空でも構いません。
+この方法でキーを渡す場合、`.env` は不要です。両方に値がある場合は既定で `.env` が優先されます。
+ホストから渡した値を優先する場合は、上記の `DOTENV_OVERRIDE_FOR_DYNACONF=false` を指定します。
+ホストの変数が未設定で空文字として渡る場合も、既定では `.env` の値を読み込めます。
 キーを変更した場合は VS Code とコンテナを開き直します。
 
 ## パッケージ: `a2a-mcp`
@@ -141,7 +157,19 @@ uv run --locked langgraph dev --no-browser
 
 端末に表示された Studio URL を開き、`a2a_demo` を選択します。
 Studio 側でログインを求められた場合は、その案内に従ってください。
-グラフは [`langgraph.json`](langgraph.json) で宣言しています。
+グラフは [`langgraph.json`](langgraph.json) で宣言しています。`.env` の読込みは LangGraph 独自の設定ではなく、共通の Dynaconf 初期化に任せます。
+
+Studio 側だけ既存の環境変数を優先する場合は、`langgraph.json` のトップレベルに次の `env` 辞書を追加する方法も使えます。値は文字列で指定します。
+
+```json
+"env": {
+  "DOTENV_OVERRIDE_FOR_DYNACONF": "false"
+}
+```
+
+LangGraph がこの設定を環境変数へ反映した後、グラフのインポート時に Dynaconf が `.env` を読み込みます。
+この設定は別端末の `run.sh` や Notebook には引き継がれないため、そちらも既存値を優先する場合はそれぞれ起動前に同じ環境変数を指定してください。
+`"env": ".env"` というファイル指定は LangGraph 自身の読込みになるため、この共通の優先順位切替には使いません。API キーを `langgraph.json` に記載しないでください。
 
 | グラフ | 役割 |
 | --- | --- |

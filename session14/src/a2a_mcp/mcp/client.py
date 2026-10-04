@@ -7,6 +7,10 @@ from contextlib import asynccontextmanager
 
 import click
 
+from a2a_mcp.common.config import init_environment
+
+init_environment()
+
 from fastmcp.utilities.logging import get_logger
 from mcp import ClientSession, StdioServerParameters
 from mcp.client.sse import sse_client
@@ -15,11 +19,6 @@ from mcp.types import CallToolResult, ReadResourceResult
 
 
 logger = get_logger(__name__)
-
-env = {
-    'OPENAI_API_KEY': os.getenv('OPENAI_API_KEY'),
-}
-
 
 @asynccontextmanager
 async def init_session(host, port, transport):
@@ -61,7 +60,17 @@ async def init_session(host, port, transport):
         stdio_params = StdioServerParameters(
             command='uv',
             args=['run', 'a2a-mcp'],
-            env=env,
+            env={
+                name: os.environ[name]
+                for name in (
+                    'OPENAI_API_KEY',
+                    'OPENAI_MODEL',
+                    'OPENAI_EMBEDDING_MODEL',
+                    'GOOGLE_PLACES_API_KEY',
+                    'DOTENV_OVERRIDE_FOR_DYNACONF',
+                )
+                if name in os.environ
+            },
         )
         async with stdio_client(stdio_params) as (read_stream, write_stream):
             async with ClientSession(

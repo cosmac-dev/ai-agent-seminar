@@ -3,6 +3,7 @@ import logging
 import os
 
 from a2a_mcp.common.types import ServerConfig
+from a2a_mcp.common.config import init_environment
 
 
 logger = logging.getLogger(__name__)
@@ -10,6 +11,7 @@ logger = logging.getLogger(__name__)
 
 def init_api_key():
     """Validate the API key used by OpenAI clients."""
+    init_environment()
     if not os.getenv('OPENAI_API_KEY'):
         logger.error('OPENAI_API_KEY is not set')
         raise ValueError('OPENAI_API_KEY is not set')
