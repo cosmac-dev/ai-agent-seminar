@@ -1,0 +1,17 @@
+[build-system]
+requires = ["setuptools>=68"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "cooperative-workflow"
+version = "0.1.0"
+description = "親エージェントがサブエージェントへ委譲し、並行実行と出典付きの集約を行うマルチエージェント"
+requires-python = ">=3.10"
+dependencies = [
+    "langchain>=1.4",
+    "langgraph>=1.2",
+    "langchain-openai>=0.2",
+]
+
+[tool.setuptools.packages.find]
+where = ["src"]
