@@ -1,0 +1,37 @@
+# 共通イメージのシステム Python に入れる直接依存。
+# 下限は各回の pyproject.toml / Notebook の要求の和集合。完全な固定は requirements.txt（uv pip compile）で行う。
+# session14 は uv.lock で固定された依存を session14/.venv に分離するため、ここには含めない。
+
+# Notebook カーネル
+ipykernel
+
+# LLM SDK（第2回・第3回など）
+openai
+requests
+
+# LangChain / LangGraph（第4回〜第13回、第15回）
+langchain>=1.4
+langchain-core>=0.3
+langchain-openai>=0.2
+langchain-community>=0.3
+langchain-experimental>=0.3
+langchain-tavily>=0.1
+langchain-text-splitters>=0.3
+langchain-mcp-adapters
+langgraph>=1.2
+langgraph-cli[inmem]>=0.4
+
+# MCP（第13回）
+fastmcp>=4
+
+# 各回の補助ライブラリ
+pydantic>=2
+numpy>=1.24
+httpx>=0.28.1
+ddgs>=9.14.4
+python-dotenv
+matplotlib
+matplotlib-fontja
+
+# 各回のパッケージを pip install --no-build-isolation -e . で導入するためのビルドバックエンド
+setuptools>=68
