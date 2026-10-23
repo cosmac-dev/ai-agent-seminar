@@ -1,13 +1,9 @@
 {
   "name": "ai-agent-seminar-session14",
-  // a2a_mcp サンプルは Python 3.13 以上と uv（uv.lock）を前提とする
-  "build": {
-    "dockerfile": "Dockerfile",
-    "context": ".."
-  },
-  "features": {
-    "ghcr.io/devcontainers/features/git:1": {}
-  },
+  // 全回共通のイメージ（.devcontainer/image で管理）。Python 3.13 と固定版の uv を含む。
+  // a2a_mcp サンプルの依存は uv.lock で固定され、共通イメージの依存と版が異なるため、
+  // システムの Python には入れず post-create.sh の uv sync --locked で session14/.venv に分離する。
+  "image": "ghcr.io/cosmac-dev/ai-agent-seminar-devcontainer:1.0.0",
   "workspaceFolder": "/workspaces/ai-agent-seminar/session14",
   "remoteUser": "vscode",
   "containerUser": "vscode",
