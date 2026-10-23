@@ -74,6 +74,7 @@ Dev Container 内からホストの Docker デーモンを利用する
   プロキシを通して `/var/run/docker.sock` から利用する
 - サンドボックスのコンテナは Dev Container 内ではなく、ホストの Docker デーモン上で起動する
 - Docker in Docker と異なり `--privileged` は不要で、ホストのイメージキャッシュを利用できる
+- Docker CLI は共通の Dev Container イメージに含まれる。ソケットを共有するのは第10回〜第12回の構成だけ
 
 macOS / Windows では Docker Desktop、WSL では Docker Desktop の WSL integration または
 WSL 内の Docker Engine、Linux では Docker Engine を起動しておきます。rootless Docker や
@@ -86,13 +87,12 @@ export CMC_DOCKER_SOCKET="$HOME/.rd/docker.sock"              # Rancher Desktop
 export CMC_DOCKER_SOCKET="/run/user/$(id -u)/docker.sock"     # rootless Docker
 ```
 
-コンテナ作成時に
-[`post-create.sh`](../.devcontainer/session10/post-create.sh) が Docker の疎通を確認し、
+コンテナ作成時に、共通イメージに含まれる `seminar-docker-check` が Docker の疎通を確認し、
 `python:3.12-alpine` を取得します。失敗してもコンテナ作成は中断しないため、必要に応じて
 次のコマンドで再実行できます。
 
 ```bash
-bash /workspaces/ai-agent-seminar/.devcontainer/session10/post-create.sh
+seminar-docker-check session10
 ```
 
 動作確認:
