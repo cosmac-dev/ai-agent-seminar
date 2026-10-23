@@ -51,43 +51,11 @@ Colabでは通常Dockerデーモンを利用できません。Codex CLIはイン
 
 ## VS Code（Dev Container）利用時の注意
 
-Dev Container 内からホストの Docker デーモンを利用する
-**Docker outside of Docker（DooD）** を有効にしています。
-
-- ホストの Docker ソケットを `/var/run/docker-host.sock` として共有し、feature が用意する
-  プロキシを通して `/var/run/docker.sock` から利用する
-- サンドボックスのコンテナは Dev Container 内ではなく、ホストの Docker デーモン上で起動する
-- Docker in Docker と異なり `--privileged` は不要で、ホストのイメージキャッシュを利用できる
-
-macOS / Windows では Docker Desktop、WSL では Docker Desktop の WSL integration または
-WSL 内の Docker Engine、Linux では Docker Engine を起動しておきます。rootless Docker や
-既定以外のソケットを使う場合は、VS Code を起動する前に `CMC_DOCKER_SOCKET` を設定します。
-
-```bash
-export CMC_DOCKER_SOCKET="$HOME/.colima/default/docker.sock"  # Colima
-export CMC_DOCKER_SOCKET="$HOME/.orbstack/run/docker.sock"    # OrbStack
-export CMC_DOCKER_SOCKET="$HOME/.rd/docker.sock"              # Rancher Desktop
-export CMC_DOCKER_SOCKET="/run/user/$(id -u)/docker.sock"     # rootless Docker
-```
-
-コンテナ作成時に
-[`post-create.sh`](../.devcontainer/session09/post-create.sh) が Docker の疎通を確認し、
-`python:3.12-alpine` を取得します。失敗してもコンテナ作成は中断しないため、必要に応じて
-次のコマンドで再実行できます。
-
-```bash
-bash /workspaces/ai-agent-seminar/.devcontainer/session09/post-create.sh
-```
-
-動作確認:
-
-```bash
-docker version
-docker run --rm --network=none python:3.12-alpine python -c "print('ok')"
-```
+第9回の構成はホストの Docker ソケットを共有しないため、`DockerExecutionPolicy` は利用できません。
+Docker のサンドボックスは、Docker outside of Docker を有効にした第10回の構成で扱います。
+準備手順は [`session10/README.md`](../session10/README.md) を参照してください。
 
 `HostExecutionPolicy` は Dev Container 自体でコマンドを実行します。
-`DockerExecutionPolicy` は DooD による専用コンテナを使用できます。
 `CodexSandboxExecutionPolicy` は、Dev Container 内でホストカーネルのサンドボックス機構を
 利用できない場合があるため、環境によっては起動しません。
 
@@ -95,8 +63,4 @@ docker run --rm --network=none python:3.12-alpine python -c "print('ok')"
 
 | 症状 | 対処 |
 | --- | --- |
-| `Cannot connect to the Docker daemon` | Docker Desktop / Docker Engine の起動を確認し、**Dev Containers: Rebuild Container** を実行 |
-| `docker: command not found` | **Dev Containers: Rebuild Container Without Cache** を実行 |
-| `Error response from daemon: No such image` | `docker pull python:3.12-alpine` を実行 |
-| `permission denied ... docker.sock` | Linux では Docker グループを確認。rootless Docker では `CMC_DOCKER_SOCKET` を設定 |
 | API キーがコンテナに渡らない | キーを設定したターミナルから VS Code を起動し直し、コンテナをリビルド |
