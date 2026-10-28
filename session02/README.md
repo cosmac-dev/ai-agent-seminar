@@ -15,3 +15,7 @@
 1. GitHub 上で `session02/session02_llm_basics.ipynb` を開く
 2. ノートブック先頭の **[Open In Colab]** をクリックする。Google に未ログインの場合はログイン画面が出るので、事前準備 1 のアカウントでログインする。Colab を初めて使う場合は、利用規約の同意やウェルカム画面が出ることがあるので、表示に従って進める
 3. Colab で`session02_llm_basics.ipynb`が表示されることを確認する
+
+## ローカル（Dev Container）で実行する場合
+
+Dev Container の **ai-agent-seminar-session02** でも実行できます（[リポジトリの README](../README.md#vs-codedev-container) を参照）。
