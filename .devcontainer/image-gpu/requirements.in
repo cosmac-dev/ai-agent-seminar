@@ -1,10 +1,11 @@
 # NVIDIA GPU 用イメージのシステム Python に入れる直接依存（第1回、第3回の GPU 版）。
-# 完全な固定は requirements.txt（uv pip compile、linux/amd64）で行う。
+# 完全な固定はアーキテクチャごとの requirements-amd64.txt・requirements-arm64.txt（uv pip compile）で行う。
 
 # Notebook カーネル
 ipykernel
 
-# オープンモデルの実行（第1回）。torch は PyPI の CUDA 版（linux/amd64 の wheel が CUDA ライブラリを同梱）。
+# オープンモデルの実行（第1回）。torch は CUDA 12.8 版（amd64 は PyPI の wheel が CUDA ライブラリを同梱、
+# arm64 は PyTorch の CUDA 12.8 用インデックスの wheel）。
 # 版は vLLM 0.19.1 が固定する torch に合わせる（第3回の GPU 版で vLLM を Notebook から追加しても torch を入れ直さない）。
 torch==2.10.0
 transformers

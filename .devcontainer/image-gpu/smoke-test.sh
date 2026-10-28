@@ -39,6 +39,11 @@ if torch.version.cuda is None:
 print(f"[smoke-test] torch {torch.__version__} (CUDA {torch.version.cuda})")
 PY
 
-python -m pip check
+# arm64 の NVIDIA の wheel の一部は独自のタグ（manylinux2014_sbsa）を使うため、pip check が
+# 「is not supported on this platform」と報告する。依存の不整合だけを失敗とする。
+if ! pip_check="$(python -m pip check 2>&1)"; then
+  unexpected="$(grep -Ev '^nvidia-[0-9a-z-]+ [^ ]+ is not supported on this platform$' <<< "${pip_check}" || true)"
+  [[ -z "${unexpected}" ]] || fail "pip check: ${unexpected}"
+fi
 
 echo "[smoke-test] OK"

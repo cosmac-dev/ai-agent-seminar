@@ -1,7 +1,8 @@
 # syntax=docker/dockerfile:1
-# NVIDIA GPU を前提とする回（第1回、第3回の GPU 版）の Dev Container イメージ。linux/amd64 だけをビルドする。
+# NVIDIA GPU を前提とする回（第1回、第3回の GPU 版）の Dev Container イメージ。
+# linux/amd64 と linux/arm64（DGX Spark など NVIDIA GPU のある Arm のマシン）をビルドする。
 # 構成（.devcontainer/session01/ など）はビルド済みのこのイメージを "image" で参照し、hostRequirements.gpu で GPU を使う。
-# 依存を変える場合は requirements.in を編集して requirements.txt を再生成し、VERSION を上げる。
+# 依存を変える場合は requirements.in を編集して requirements-<アーキテクチャ>.txt を再生成し、VERSION を上げる。
 
 # ベースイメージと uv は共通イメージ（../image/Dockerfile）と同じものをタグとダイジェストの両方で固定する。
 ARG BASE_IMAGE=mcr.microsoft.com/devcontainers/python:3.2.6-3.13-trixie@sha256:5ea7e72d3c1beb6aefdfea8001483345c39af4898e22f2c543deb6a00802ede4
@@ -14,9 +15,12 @@ FROM ${BASE_IMAGE}
 COPY --from=uv /uv /uvx /usr/local/bin/
 
 # torch（CUDA 版）・transformers などをシステムの Python 3.13 に固定版で入れる。
-# requirements.txt は requirements.in から uv pip compile --generate-hashes で生成したもの。
-COPY requirements.txt /tmp/seminar-requirements.txt
-RUN uv pip install --system --require-hashes --no-cache -r /tmp/seminar-requirements.txt \
+# requirements-<アーキテクチャ>.txt は requirements.in から uv pip compile --generate-hashes で生成したもの。
+# arm64 は PyPI の torch が CPU 版のため、torch を PyTorch の CUDA 12.8 用インデックスから取る（--torch-backend cu128）。
+ARG TARGETARCH
+COPY requirements-${TARGETARCH}.txt /tmp/seminar-requirements.txt
+RUN if [ "${TARGETARCH}" = "arm64" ]; then export UV_TORCH_BACKEND=cu128; fi \
+    && uv pip install --system --require-hashes --no-cache -r /tmp/seminar-requirements.txt \
     && rm /tmp/seminar-requirements.txt
 
 COPY --chmod=0755 smoke-test.sh /usr/local/share/ai-agent-seminar/smoke-test.sh
