@@ -194,10 +194,10 @@ code .
 VS Code を同じターミナルから起動することで、Dev Containers がホスト側の環境変数を参照できます。その後、次の手順でコンテナを開きます。
 
 1. コマンドパレットから **Dev Containers: Reopen in Container** を実行します。
-2. 構成の選択を求められたら、実行するセッションに対応する `ai-agent-seminar-sessionNN` を選びます。第1回〜第3回など専用構成がない場合は `ai-agent-seminar-root` を使用します。
+2. 構成の選択を求められたら、実行するセッションに対応する `ai-agent-seminar-sessionNN` を選びます。第1回と第3回の `(NVIDIA GPU)` の付いた構成は NVIDIA GPU のあるマシン用です（第1回は NVIDIA GPU が必要で、GPU がない場合は Colab を使います）。
 3. 共通イメージの取得とコンテナの作成が終わったら、ノートブックを開いてセットアップセルから実行します。
 
-すべての構成は、共通の Dev Container イメージ `ghcr.io/cosmac-dev/ai-agent-seminar-devcontainer` を使用します。イメージには Python 3.13、uv、Git、Docker CLI と、教材で使う LangChain・LangGraph・OpenAI SDK・FastMCP などが固定版で含まれます。第14回は `uv.lock` で固定された依存を `session14/.venv` に、第16回は `session16/requirements.txt` のフレームワーク群を `session16/.venv` に分けて導入します。
+構成は、共通の Dev Container イメージ `ghcr.io/cosmac-dev/ai-agent-seminar-devcontainer` を使用します。イメージには Python 3.13、uv、Git、Docker CLI と、教材で使う LangChain・LangGraph・OpenAI SDK・FastMCP などが固定版で含まれます。`(NVIDIA GPU)` の付いた構成は、CUDA 版の PyTorch と Transformers などを含む GPU 用イメージ `ghcr.io/cosmac-dev/ai-agent-seminar-devcontainer-gpu`（取得するサイズはおよそ 4 GB）を使用します。コンテナから GPU を使うには、ホストに NVIDIA のドライバーと、Docker から GPU を使う設定（Linux は NVIDIA Container Toolkit、Windows は Docker Desktop の WSL 2 バックエンド）が必要です。第14回は `uv.lock` で固定された依存を `session14/.venv` に、第16回は `session16/requirements.txt` のフレームワーク群を `session16/.venv` に分けて導入します。
 
 `.devcontainer` の設定により、環境変数は次のように引き継がれます。
 
@@ -206,6 +206,9 @@ VS Code を同じターミナルから起動することで、Dev Containers が
 | `CMC_OPENAI_API_KEY`        | `OPENAI_API_KEY`        | OpenAI API の認証                          |
 | `CMC_TAVILY_API_KEY`        | `TAVILY_API_KEY`        | Tavily API の認証（第8回〜第12回の構成）   |
 | `CMC_GOOGLE_PLACES_API_KEY` | `GOOGLE_PLACES_API_KEY` | 任意。Google Places API（第14回の構成）    |
+| `CMC_HF_TOKEN`              | `HF_TOKEN`              | 任意。Hugging Face の認証（第1回・第3回の NVIDIA GPU 版の構成） |
+| `VLLM_SERVER_HOST`          | `VLLM_SERVER_HOST`      | 任意。vLLM サーバーの接続先（第3回の構成。[`session03/README.md`](./session03/README.md)） |
+| `OLLAMA_SERVER_HOST`        | `OLLAMA_SERVER_HOST`    | 任意。Ollama サーバーの接続先（第3回の構成） |
 
 セッション別の構成では、そのセッションをワークスペースとして開き、パッケージを持つ回では `src` ディレクトリを `PYTHONPATH` に追加します。また、Python、Pylance、Jupyter の VS Code 拡張機能が自動的に導入されます。ノートブック冒頭のセットアップセルも実行してください。
 
