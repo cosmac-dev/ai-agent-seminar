@@ -210,6 +210,8 @@ VS Code を同じターミナルから起動することで、Dev Containers が
 | `VLLM_SERVER_HOST`          | `VLLM_SERVER_HOST`      | 任意。vLLM サーバーの接続先（第3回の構成。[`session03/README.md`](./session03/README.md)） |
 | `OLLAMA_SERVER_HOST`        | `OLLAMA_SERVER_HOST`    | 任意。Ollama サーバーの接続先（第3回の構成） |
 
+`(NVIDIA GPU)` の付いた構成では、ホストで環境変数 `HF_HUB_CACHE` に Hugging Face のキャッシュの場所（既定は Linux・macOS が `~/.cache/huggingface/hub`、Windows が `%USERPROFILE%\.cache\huggingface\hub`）を設定すると、ホストにダウンロード済みのモデルをコンテナでも使えます。ホストのキャッシュは読み取り専用で使い、コンテナで新たにダウンロードしたモデルはコンテナを削除すると消えます。
+
 セッション別の構成では、そのセッションをワークスペースとして開き、パッケージを持つ回では `src` ディレクトリを `PYTHONPATH` に追加します。また、Python、Pylance、Jupyter の VS Code 拡張機能が自動的に導入されます。ノートブック冒頭のセットアップセルも実行してください。
 
 ホストで API キーを設定していない場合は、ノートブックの入力欄から設定してください。環境変数を変更した後は、VS Code を起動し直して **Dev Containers: Rebuild Container** を実行します。
