@@ -1,0 +1,30 @@
+{
+  "name": "ai-agent-seminar-session03 (NVIDIA GPU)",
+  // NVIDIA GPU 用のイメージ（.devcontainer/image-gpu で管理）。Python・uv・Git・CUDA 版の torch・transformers などを固定版で含む。
+  "image": "ghcr.io/cosmac-dev/ai-agent-seminar-devcontainer-gpu:1.0.0",
+  // NVIDIA GPU を使う（ホストに NVIDIA のドライバーと、Docker から GPU を使う設定が必要）。
+  "hostRequirements": {
+    "gpu": true
+  },
+  "workspaceFolder": "/workspaces/ai-agent-seminar/session03",
+  "customizations": {
+    "vscode": {
+      "settings": {
+        "python.defaultInterpreterPath": "/usr/local/bin/python",
+        "jupyter.notebookFileRoot": "${workspaceFolder}"
+      },
+      "extensions": [
+        "ms-python.python",
+        "ms-python.vscode-pylance",
+        "ms-toolsai.jupyter"
+      ]
+    }
+  },
+  "containerEnv": {
+    "OPENAI_API_KEY": "${localEnv:CMC_OPENAI_API_KEY}",
+    "HF_TOKEN": "${localEnv:CMC_HF_TOKEN}",
+    // 第3回の vLLM・Ollama のサーバーの接続先（ホスト名）。コンテナにインストールした場合は使わない
+    "VLLM_SERVER_HOST": "${localEnv:VLLM_SERVER_HOST:host.docker.internal}",
+    "OLLAMA_SERVER_HOST": "${localEnv:OLLAMA_SERVER_HOST:host.docker.internal}"
+  }
+}
