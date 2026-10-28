@@ -7,10 +7,12 @@
     "gpu": true
   },
   "workspaceFolder": "/workspaces/${localWorkspaceFolderBasename}/session01",
-  // ホストの Hugging Face のキャッシュ（ホストで HF_HUB_CACHE を設定した場合）を読み取り専用でマウントし、
-  // link-host-models.sh でコンテナのキャッシュから使えるようにする。未設定の場合はディレクトリでない /dev/null をマウントする。
+  // ホストの Hugging Face のモデルを読み取り専用でマウントし、link-host-models.sh でコンテナのキャッシュから使えるようにする。
+  // - ホストのディレクトリ: ホストで HF_HUB_CACHE を設定した場合。未設定ならディレクトリでない /dev/null をマウントする
+  // - Docker のボリューム: 既定は ai-agent-seminar-hf-hub（なければ空で作られる）。ホストで HF_HUB_VOLUME を設定すると別のボリュームを使う
   "mounts": [
-    "source=${localEnv:HF_HUB_CACHE:/dev/null},target=/mnt/host-hf-hub,type=bind,readonly"
+    "source=${localEnv:HF_HUB_CACHE:/dev/null},target=/mnt/host-hf-hub,type=bind,readonly",
+    "source=${localEnv:HF_HUB_VOLUME:ai-agent-seminar-hf-hub},target=/mnt/hf-hub-volume,type=volume,readonly"
   ],
   "postStartCommand": "bash /workspaces/${localWorkspaceFolderBasename}/.devcontainer/session01/link-host-models.sh",
   "customizations": {
