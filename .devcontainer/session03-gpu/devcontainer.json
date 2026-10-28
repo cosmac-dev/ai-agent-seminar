@@ -1,12 +1,18 @@
 {
   "name": "ai-agent-seminar-session03 (NVIDIA GPU)",
   // NVIDIA GPU 用のイメージ（.devcontainer/image-gpu で管理）。Python・uv・Git・CUDA 版の torch・transformers などを固定版で含む。
-  "image": "ghcr.io/cosmac-dev/ai-agent-seminar-devcontainer-gpu:1.0.0",
+  "image": "ghcr.io/cosmac-dev/ai-agent-seminar-devcontainer-gpu:1.1.0",
   // NVIDIA GPU を使う（ホストに NVIDIA のドライバーと、Docker から GPU を使う設定が必要）。
   "hostRequirements": {
     "gpu": true
   },
   "workspaceFolder": "/workspaces/${localWorkspaceFolderBasename}/session03",
+  // ホストの Hugging Face のキャッシュ（ホストで HF_HUB_CACHE を設定した場合）を読み取り専用でマウントし、
+  // link-host-models.sh でコンテナのキャッシュから使えるようにする。未設定の場合はディレクトリでない /dev/null をマウントする。
+  "mounts": [
+    "source=${localEnv:HF_HUB_CACHE:/dev/null},target=/mnt/host-hf-hub,type=bind,readonly"
+  ],
+  "postStartCommand": "bash /workspaces/${localWorkspaceFolderBasename}/.devcontainer/session03-gpu/link-host-models.sh",
   "customizations": {
     "vscode": {
       "settings": {
