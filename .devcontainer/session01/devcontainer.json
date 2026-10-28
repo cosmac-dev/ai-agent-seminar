@@ -6,7 +6,7 @@
   "hostRequirements": {
     "gpu": true
   },
-  "workspaceFolder": "/workspaces/ai-agent-seminar/session01",
+  "workspaceFolder": "/workspaces/${localWorkspaceFolderBasename}/session01",
   "customizations": {
     "vscode": {
       "settings": {
