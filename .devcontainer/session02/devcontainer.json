@@ -2,7 +2,7 @@
   "name": "ai-agent-seminar-session02",
   // 全回共通のイメージ（.devcontainer/image で管理）。Python・uv・Git・Docker CLI・教材の依存を固定版で含む。
   "image": "ghcr.io/cosmac-dev/ai-agent-seminar-devcontainer:1.0.0",
-  "workspaceFolder": "/workspaces/ai-agent-seminar/session02",
+  "workspaceFolder": "/workspaces/${localWorkspaceFolderBasename}/session02",
   "customizations": {
     "vscode": {
       "settings": {
