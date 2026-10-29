@@ -3,9 +3,9 @@
   // NVIDIA GPU 用のイメージ（.devcontainer/image-gpu で管理）。Python・uv・Git・CUDA 版の torch・transformers などを固定版で含む。
   "image": "ghcr.io/cosmac-dev/ai-agent-seminar-devcontainer-gpu:1.1.0",
   // NVIDIA GPU を使う（ホストに NVIDIA のドライバーと、Docker から GPU を使う設定が必要）。
-  "hostRequirements": {
-    "gpu": true
-  },
+  // hostRequirements.gpu は Docker に nvidia ランタイムが登録されていないと GPU なしと判定するため、
+  // --gpus all で常に GPU を渡す。GPU のないマシンではコンテナを起動できない。
+  "runArgs": ["--gpus", "all"],
   "workspaceFolder": "/workspaces/${localWorkspaceFolderBasename}/session01",
   // ホストの Hugging Face のモデルを読み取り専用でマウントし、link-host-models.sh でコンテナのキャッシュから使えるようにする。
   // - ホストのディレクトリ: ホストで HF_HUB_CACHE を設定した場合。未設定ならディレクトリでない /dev/null をマウントする
