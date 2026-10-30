@@ -207,8 +207,8 @@ VS Code を同じターミナルから起動することで、Dev Containers が
 | `CMC_TAVILY_API_KEY`        | `TAVILY_API_KEY`        | Tavily API の認証（第8回〜第12回の構成）   |
 | `CMC_GOOGLE_PLACES_API_KEY` | `GOOGLE_PLACES_API_KEY` | 任意。Google Places API（第14回の構成）    |
 | `CMC_HF_TOKEN`              | `HF_TOKEN`              | 任意。Hugging Face の認証（第1回・第3回の NVIDIA GPU 版の構成） |
-| `VLLM_SERVER_HOST`          | `VLLM_SERVER_HOST`      | 任意。vLLM サーバーの接続先（第3回の構成。[`session03/README.md`](./session03/README.md)） |
-| `OLLAMA_SERVER_HOST`        | `OLLAMA_SERVER_HOST`    | 任意。Ollama サーバーの接続先（第3回の構成） |
+| `LLM_SERVER_HOST`           | `LLM_SERVER_HOST`       | 任意。コンテナの外の OpenAI 互換サーバーの接続先（第3回の構成。[`session03/README.md`](./session03/README.md)） |
+| `OLLAMA_SERVER_HOST`        | `OLLAMA_SERVER_HOST`    | 任意。コンテナの外の Ollama の接続先（第3回の構成） |
 
 `(NVIDIA GPU)` の付いた構成では、ホストで環境変数 `HF_HUB_CACHE` に Hugging Face のキャッシュの場所（既定は Linux・macOS が `~/.cache/huggingface/hub`、Windows が `%USERPROFILE%\.cache\huggingface\hub`）を設定すると、ホストにダウンロード済みのモデルをコンテナでも使えます。Docker のボリュームに置いたモデルも使えます。ボリュームは `ai-agent-seminar-hf-hub` を使い、ホストで環境変数 `HF_HUB_VOLUME` を設定すると別のボリュームを使います（モデルはボリュームの直下か `hub/` の下に置きます）。どちらも読み取り専用で使い、コンテナで新たにダウンロードしたモデルはコンテナを削除すると消えます。
 
