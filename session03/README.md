@@ -18,14 +18,13 @@
 
 ## ローカル（Dev Container）で実行する場合
 
-Dev Container の構成は 2 つあります（[リポジトリの README](../README.md#vs-codedev-container) を参照）。どちらのイメージも vLLM と Ollama を含まないため、ノートブックのセルでコンテナにインストールするか、コンテナの外（ホストなど）で起動したサーバーに接続します。
+Dev Container の構成は 2 つあります（[リポジトリの README](../README.md#vs-codedev-container) を参照）。どちらのイメージも vLLM と Ollama を含まないため、ノートブックのセルでコンテナにインストールして使います。
 
 | 構成 | 対象 | vLLM（A） | Ollama（B） |
 | --- | --- | --- | --- |
-| **ai-agent-seminar-session03 (NVIDIA GPU)** | NVIDIA GPU のあるマシン | コンテナにインストール、またはコンテナの外のサーバーに接続 | コンテナにインストール、またはホストで起動 |
-| **ai-agent-seminar-session03** | それ以外（Mac など） | A-1 は実行不可。A-2 はコンテナの外の NVIDIA GPU のあるマシンのサーバーに接続（用意できない場合は Colab で実行） | コンテナにインストール、またはホストで起動 |
+| **ai-agent-seminar-session03 (NVIDIA GPU)** | NVIDIA GPU のあるマシン | コンテナにインストール | コンテナにインストール |
+| **ai-agent-seminar-session03** | それ以外（Mac など） | コンテナでは実行不可（A-2 はホストのサーバーに接続可） | コンテナにインストール（CPU で動作） |
 
-- コンテナにインストールする場合: ノートブックの `INSTALL_VLLM`・`INSTALL_OLLAMA` を `True` にして実行します。どちらも数分かかり、vLLM はコンテナの容量がおよそ 3 GB 増えます。vLLM はインストール後にカーネルを再起動し、Ollama はターミナルで `ollama serve` を起動します。コンテナを作り直した場合はインストールし直します。
-- ホストの Ollama を使う場合: ホストに [Ollama](https://ollama.com/download) をインストールし、ホストのターミナルで `ollama pull qwen3:0.6b` を実行しておきます。Mac では Mac の GPU を使います。
-- 接続先: コンテナにインストールした場合は `localhost` に接続します。それ以外は、構成が環境変数 `VLLM_SERVER_HOST`・`OLLAMA_SERVER_HOST` で渡す接続先（既定は `host.docker.internal`）に接続します。変える場合は、ホストで同じ名前の環境変数を設定してからコンテナを作り直します。
-- `host.docker.internal` は Docker Desktop で使えます。Linux の Docker Engine では、ホストの IP アドレス（例: `172.17.0.1`）を設定し、サーバーをすべてのインターフェースで待ち受けるように起動します。ホストの Ollama に接続できない場合も、`OLLAMA_HOST=0.0.0.0 ollama serve` で起動し直します。
+ノートブックの `INSTALL_VLLM`・`INSTALL_OLLAMA` を `True` にして実行します。どちらも数分かかり、vLLM はコンテナの容量がおよそ 3 GB 増えます。vLLM はインストール後にカーネルを再起動し、Ollama はターミナルで `ollama serve` を起動します。コンテナを作り直した場合はインストールし直します。
+
+コンテナの外（ホストなど）で起動したサーバーに接続することもできます。ホストで環境変数 `LLM_SERVER_HOST`（A-2 の OpenAI 互換サーバー）・`OLLAMA_SERVER_HOST`（Ollama）に接続先のホスト名を設定してから、コンテナを作り直します。Docker Desktop では、ホストを `host.docker.internal` で指定できます。ポートとモデル名は、ノートブックのものに合わせてください。

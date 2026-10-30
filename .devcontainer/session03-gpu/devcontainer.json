@@ -31,8 +31,8 @@
   "containerEnv": {
     "OPENAI_API_KEY": "${localEnv:CMC_OPENAI_API_KEY}",
     "HF_TOKEN": "${localEnv:CMC_HF_TOKEN}",
-    // 第3回の vLLM・Ollama のサーバーの接続先（ホスト名）。コンテナにインストールした場合は使わない
-    "VLLM_SERVER_HOST": "${localEnv:VLLM_SERVER_HOST:host.docker.internal}",
-    "OLLAMA_SERVER_HOST": "${localEnv:OLLAMA_SERVER_HOST:host.docker.internal}"
+    // 第3回の推論サーバーの接続先（ホスト名）。既定はコンテナ内（localhost）。コンテナの外のサーバーに接続する場合にホストで設定する
+    "LLM_SERVER_HOST": "${localEnv:LLM_SERVER_HOST:localhost}",
+    "OLLAMA_SERVER_HOST": "${localEnv:OLLAMA_SERVER_HOST:localhost}"
   }
 }
