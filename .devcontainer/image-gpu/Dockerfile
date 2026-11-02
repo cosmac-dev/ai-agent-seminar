@@ -1,7 +1,7 @@
 # syntax=docker/dockerfile:1
 # NVIDIA GPU を前提とする回（第1回、第3回の GPU 版）の Dev Container イメージ。
-# linux/amd64 と linux/arm64（DGX Spark など NVIDIA GPU のある Arm のマシン）をビルドする。
-# 構成（.devcontainer/session01/ など）はビルド済みのこのイメージを "image" で参照し、hostRequirements.gpu で GPU を使う。
+# linux/amd64 と linux/arm64（NVIDIA GPU のある Arm のマシン）をビルドする。
+# 構成（.devcontainer/session01/ など）はビルド済みのこのイメージを "image" で参照し、runArgs の --gpus all で GPU を使う。
 # 依存を変える場合は requirements.in を編集して requirements-<アーキテクチャ>.txt を再生成し、VERSION を上げる。
 
 # ベースイメージと uv は共通イメージ（../image/Dockerfile）と同じものをタグとダイジェストの両方で固定する。
