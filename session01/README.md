@@ -38,3 +38,12 @@ Accessトークンは第三者に共有しないでください。GitHub など�
 1. GitHub 上で `session01/session01_llm_basics.ipynb` を開く
 2. ノートブック先頭の **[Open In Colab]** をクリックする。Google に未ログインの場合はログイン画面が出るので、事前準備 1 のアカウントでログインする。Colab を初めて使う場合は、利用規約の同意やウェルカム画面が出ることがあるので、表示に従って進める
 3. Colab で`session01_llm_basics.ipynb`が表示されることを確認する
+
+## ローカル（Dev Container）で実行する場合
+
+NVIDIA GPU のあるマシンでは、Colab の代わりに Dev Container で実行できます（[リポジトリの README](../README.md#vs-codedev-container) を参照）。GPU がない場合は Colab を使ってください。
+
+1. ホストに NVIDIA のドライバーと、Docker から GPU を使う設定（Linux は NVIDIA Container Toolkit、Windows は Docker Desktop の WSL 2 バックエンド）を用意する
+2. **Dev Containers: Reopen in Container** で **ai-agent-seminar-session01 (NVIDIA GPU)** を選ぶ
+
+使うパッケージ（CUDA 版の PyTorch、Transformers など）はイメージに含まれているため、ノートブックのパッケージのインストールのセルは Colab でだけ実行されます。
