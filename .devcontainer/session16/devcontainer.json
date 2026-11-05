@@ -1,0 +1,31 @@
+{
+  "name": "ai-agent-seminar-session16",
+  // 全回共通のイメージ（.devcontainer/image で管理）。Python 3.13 と固定版の uv を含む。
+  // 第16回のフレームワーク群（session16/requirements.txt）は共通イメージの依存と版が異なるため、
+  // システムの Python には入れず post-create.sh で session16/.venv に分離する。
+  "image": "ghcr.io/cosmac-dev/ai-agent-seminar-devcontainer:1.0.0",
+  "workspaceFolder": "/workspaces/${localWorkspaceFolderBasename}/session16",
+  "remoteUser": "vscode",
+  "containerUser": "vscode",
+  "customizations": {
+    "vscode": {
+      "settings": {
+        // post-create.sh で作る session16/.venv をカーネルに使う
+        "python.defaultInterpreterPath": "${workspaceFolder}/.venv/bin/python",
+        "jupyter.notebookFileRoot": "${workspaceFolder}"
+      },
+      "extensions": [
+        "ms-python.python",
+        "ms-python.vscode-pylance",
+        "ms-toolsai.jupyter"
+      ]
+    }
+  },
+  "remoteEnv": {
+    "OPENAI_API_KEY": "${localEnv:CMC_OPENAI_API_KEY}",
+    "UV_LINK_MODE": "copy"
+  },
+  // 起動時に .venv を作成・同期し、完了を待ってから Notebook を使えるようにする。
+  "postStartCommand": "bash /workspaces/${localWorkspaceFolderBasename}/.devcontainer/session16/post-create.sh",
+  "waitFor": "postStartCommand"
+}
