@@ -24,6 +24,9 @@ langgraph-cli[inmem]>=0.4
 # MCP（第13回）
 fastmcp>=4
 
+# ブラウザ操作（第17回）。ブラウザ本体は第17回の構成が起動時に入れる
+playwright>=1.59
+
 # 各回の補助ライブラリ
 pydantic>=2
 numpy>=1.24

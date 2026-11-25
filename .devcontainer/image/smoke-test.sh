@@ -45,6 +45,7 @@ modules = [
     "dotenv",
     "matplotlib",
     "matplotlib_fontja",
+    "playwright",
     "setuptools",
 ]
 for name in modules:
