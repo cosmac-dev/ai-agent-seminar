@@ -74,18 +74,17 @@ Dev Container 内からホストの Docker デーモンを利用する
   プロキシを通して `/var/run/docker.sock` から利用する
 - サンドボックスのコンテナは Dev Container 内ではなく、ホストの Docker デーモン上で起動する
 - Docker in Docker と異なり `--privileged` は不要で、ホストのイメージキャッシュを利用できる
-- Docker CLI は共通の Dev Container イメージに含まれる。ソケットを共有するのは第10回〜第12回の構成だけ
+- Docker CLI は共通の Dev Container イメージに含まれる。ソケットを共有するのは第10回〜第12回と第17回の構成だけ
 
 macOS / Windows では Docker Desktop、WSL では Docker Desktop の WSL integration または
-WSL 内の Docker Engine、Linux では Docker Engine を起動しておきます。rootless Docker や
-既定以外のソケットを使う場合は、VS Code を起動する前に `CMC_DOCKER_SOCKET` を設定します。
+WSL 内の Docker Engine、Linux では Docker Engine を起動しておきます。
 
-```bash
-export CMC_DOCKER_SOCKET="$HOME/.colima/default/docker.sock"  # Colima
-export CMC_DOCKER_SOCKET="$HOME/.orbstack/run/docker.sock"    # OrbStack
-export CMC_DOCKER_SOCKET="$HOME/.rd/docker.sock"              # Rancher Desktop
-export CMC_DOCKER_SOCKET="/run/user/$(id -u)/docker.sock"     # rootless Docker
-```
+構成が共有するソケットは `/var/run/docker.sock` です。このパスは、Docker デーモンから見た場所です。
+Colima・OrbStack・Rancher Desktop のように VM の中で Docker を動かす場合も、ホスト側のソケットの場所
+（`DOCKER_HOST` など）によらず、VM の中の `/var/run/docker.sock` が共有されます。
+
+rootless Docker では、ソケットが `/run/user/<UID>/docker.sock` にあります（`<UID>` は `id -u` の値）。
+この回の `devcontainer.json` の `mounts` にある `source=/var/run/docker.sock` を、そのパスに書き換えてください。
 
 コンテナ作成時に、共通イメージに含まれる `seminar-docker-check` が Docker の疎通を確認し、
 `python:3.12-alpine` を取得します。失敗してもコンテナ作成は中断しないため、必要に応じて
@@ -114,5 +113,5 @@ docker run --rm --network=none python:3.12-alpine python -c "print('ok')"
 | `Cannot connect to the Docker daemon` | Docker Desktop / Docker Engine の起動を確認し、**Dev Containers: Rebuild Container** を実行 |
 | `docker: command not found` | **Dev Containers: Rebuild Container Without Cache** を実行 |
 | `Error response from daemon: No such image` | `docker pull python:3.12-alpine` を実行 |
-| `permission denied ... docker.sock` | Linux では Docker グループを確認。rootless Docker では `CMC_DOCKER_SOCKET` を設定 |
+| `permission denied ... docker.sock` | Linux では Docker グループを確認。rootless Docker では `mounts` の `source=` を書き換える |
 | API キーがコンテナに渡らない | キーを設定したターミナルから VS Code を起動し直し、コンテナをリビルド |
