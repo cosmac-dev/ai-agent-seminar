@@ -1,0 +1,25 @@
+[build-system]
+requires = ["setuptools>=68"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "computer-use-agent"
+version = "0.1.0"
+description = "OpenAI の computer tool と AT-SPI で仮想デスクトップを操作するエージェント"
+requires-python = ">=3.10"
+dependencies = [
+    "openai>=3.35",
+    "openai-agents>=0.26",
+    "langchain>=1.4",
+    "langchain-openai>=1.7",
+]
+
+[project.optional-dependencies]
+test = ["pytest>=8", "pytest-asyncio>=0.23"]
+
+[tool.setuptools.packages.find]
+where = ["src"]
+
+[tool.pytest.ini_options]
+asyncio_mode = "auto"
+asyncio_default_fixture_loop_scope = "function"

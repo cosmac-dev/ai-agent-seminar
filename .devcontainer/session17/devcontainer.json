@@ -1,0 +1,44 @@
+{
+  "name": "ai-agent-seminar-session17",
+  // 全回共通のイメージ（.devcontainer/image で管理）。Python・uv・Git・Docker CLI・教材の依存を固定版で含む。
+  "image": "ghcr.io/cosmac-dev/ai-agent-seminar-devcontainer:1.1.0",
+  "features": {
+    // Docker outside of Docker: ホストの Docker デーモンをソケット経由で利用する（この回の仮想デスクトップ用）。
+    // Docker CLI はイメージに含まれるため、feature はソケットのプロキシと docker グループの設定だけを行う。
+    // trixie では moby パッケージがないため、イメージと同じ Docker CE 系の設定（moby: false）にする。
+    "ghcr.io/devcontainers/features/docker-outside-of-docker:1.10.1": {
+      "moby": false,
+      "dockerDashComposeVersion": "none",
+      "installDockerBuildx": false,
+      "installDockerComposeSwitch": false
+    }
+  },
+  // ホストのソケットを feature が参照する /var/run/docker-host.sock へ bind mount する。
+  // macOS / Windows（Docker Desktop）/ WSL / Linux は既定の /var/run/docker.sock で動作する。
+  // rootless Docker など別パスの場合は、ホストで CMC_DOCKER_SOCKET を設定する。
+  "mounts": [
+    "source=${localEnv:CMC_DOCKER_SOCKET:/var/run/docker.sock},target=/var/run/docker-host.sock,type=bind"
+  ],
+  "workspaceFolder": "/workspaces/${localWorkspaceFolderBasename}/session17",
+  "customizations": {
+    "vscode": {
+      "settings": {
+        "python.defaultInterpreterPath": "/usr/local/bin/python",
+        "python.analysis.extraPaths": [
+          "${workspaceFolder}/src"
+        ],
+        "jupyter.notebookFileRoot": "${workspaceFolder}"
+      },
+      "extensions": [
+        "ms-python.python",
+        "ms-python.vscode-pylance",
+        "ms-toolsai.jupyter"
+      ]
+    }
+  },
+  "remoteEnv": {
+    "OPENAI_API_KEY": "${localEnv:CMC_OPENAI_API_KEY}"
+  },
+  // 完成版パッケージと OpenAI Agents SDK の導入、Docker の疎通確認を行う。
+  "postCreateCommand": "bash /workspaces/${localWorkspaceFolderBasename}/.devcontainer/session17/post-create.sh"
+}
