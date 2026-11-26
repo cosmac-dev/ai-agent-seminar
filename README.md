@@ -91,7 +91,7 @@ end
 | [第14回](./session14/) | A2A                                 |
 | [第15回](./session15/) | マルチエージェント（初稿） |
 | [第16回](./session16/) | フレームワーク                      |
-| 第17回 | Computer Use（予定） |
+| [第17回](./session17/) | Computer Use                        |
 | 第18回以降 | テーマ未定 |
 
 第15回以降のテーマと番号は暫定です。各回のレビュー後に後続テーマを見直します。
@@ -216,7 +216,7 @@ VS Code を同じターミナルから起動することで、Dev Containers が
 
 ホストで API キーを設定していない場合は、ノートブックの入力欄から設定してください。環境変数を変更した後は、VS Code を起動し直して **Dev Containers: Rebuild Container** を実行します。
 
-第10回〜第12回の構成では、ノートブックの Docker サンドボックスを実行するために **Docker outside of Docker**（ホストの Docker ソケット共有）を有効にしています。その他の構成ではホストの Docker ソケットを共有しません。実行環境ごとの `ExecutionPolicy` の制限、macOS / Windows / WSL / Linux での準備手順と注意点は [`session10/README.md`](./session10/README.md) を参照してください。
+第10回〜第12回の構成ではノートブックの Docker サンドボックスを、第17回の構成では仮想デスクトップのコンテナを実行するために **Docker outside of Docker**（ホストの Docker ソケット共有）を有効にしています。その他の構成ではホストの Docker ソケットを共有しません。実行環境ごとの `ExecutionPolicy` の制限、macOS / Windows / WSL / Linux での準備手順と注意点は [`session10/README.md`](./session10/README.md) を参照してください。
 
 コンテナ内でキーが設定されたことは、値そのものを表示せずに次のコマンドで確認できます。
 
