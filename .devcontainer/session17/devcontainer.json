@@ -14,10 +14,11 @@
     }
   },
   // ホストのソケットを feature が参照する /var/run/docker-host.sock へ bind mount する。
-  // macOS / Windows（Docker Desktop）/ WSL / Linux は既定の /var/run/docker.sock で動作する。
-  // rootless Docker など別パスの場合は、ホストで CMC_DOCKER_SOCKET を設定する。
+  // source は Docker デーモンから見たパス。Docker Desktop・Colima・OrbStack など VM の中で動く Docker も、
+  // VM の中の /var/run/docker.sock を指すため、この値で動作する。rootless Docker の場合だけ書き換える。
+  // ${localEnv:...} は使わない（mounts の中の変数を展開できない Dev Containers の実装がある）。
   "mounts": [
-    "source=${localEnv:CMC_DOCKER_SOCKET:/var/run/docker.sock},target=/var/run/docker-host.sock,type=bind"
+    "source=/var/run/docker.sock,target=/var/run/docker-host.sock,type=bind"
   ],
   "workspaceFolder": "/workspaces/${localWorkspaceFolderBasename}/session17",
   "customizations": {
