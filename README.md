@@ -94,11 +94,9 @@ end
 | [第17回](./session17/) | Computer Use                        |
 | 第18回以降 | テーマ未定 |
 
-第15回以降のテーマと番号は暫定です。各回のレビュー後に後続テーマを見直します。
-
 ## 実行環境
 
-教材は次のいずれかの環境で実行できます。OpenAI API を利用するセルの実行には `OPENAI_API_KEY` が必要です。第8回以降の Web 検索には、別途 `TAVILY_API_KEY` を使用します。セッション固有の準備については、各ディレクトリの README またはノートブック冒頭も確認してください。
+教材は次のいずれかの環境で実行できます。OpenAI API を利用するセルの実行には `OPENAI_API_KEY` が必要です。第8回以降の Web 検索には、別途 `TAVILY_API_KEY` を使用します。第17回は Docker コンテナの中で仮想デスクトップを動かすため、どの環境でも Docker が必要です。セッション固有の準備については、各ディレクトリの README またはノートブック冒頭も確認してください。
 
 ### VS Code（ローカル）
 
@@ -175,6 +173,8 @@ end
 
 Colab のランタイムを再起動すると環境変数やインストール済みパッケージが初期化されるため、セットアップセルを再実行してください。
 
+第17回は Docker を使うため、Colab では実行できません。
+
 ### VS Code（Dev Container）
 
 Docker、VS Code、[Dev Containers 拡張機能](https://marketplace.visualstudio.com/items?itemName=ms-vscode-remote.remote-containers)をインストールします。コンテナを開く前に、ホスト側で `CMC_OPENAI_API_KEY` を設定してください。
@@ -197,7 +197,7 @@ VS Code を同じターミナルから起動することで、Dev Containers が
 2. 構成の選択を求められたら、実行するセッションに対応する `ai-agent-seminar-sessionNN` を選びます。第1回と第3回の `(NVIDIA GPU)` の付いた構成は NVIDIA GPU のあるマシン用です（第1回は NVIDIA GPU が必要で、GPU がない場合は Colab を使います）。
 3. 共通イメージの取得とコンテナの作成が終わったら、ノートブックを開いてセットアップセルから実行します。
 
-構成は、共通の Dev Container イメージ `ghcr.io/cosmac-dev/ai-agent-seminar-devcontainer` を使用します。イメージには Python 3.13、uv、Git、Docker CLI と、教材で使う LangChain・LangGraph・OpenAI SDK・FastMCP などが固定版で含まれます。`(NVIDIA GPU)` の付いた構成は、CUDA 版の PyTorch と Transformers などを含む GPU 用イメージ `ghcr.io/cosmac-dev/ai-agent-seminar-devcontainer-gpu`（取得するサイズはおよそ 4 GB）を使用します。コンテナから GPU を使うには、ホストに NVIDIA のドライバーと、Docker から GPU を使う設定（Linux は NVIDIA Container Toolkit、Windows は Docker Desktop の WSL 2 バックエンド）が必要です。第14回は `uv.lock` で固定された依存を `session14/.venv` に、第16回は `session16/requirements.txt` のフレームワーク群を `session16/.venv` に分けて導入します。
+構成は、共通の Dev Container イメージ `ghcr.io/cosmac-dev/ai-agent-seminar-devcontainer` を使用します。イメージには Python 3.13、uv、Git、Docker CLI と、教材で使う LangChain・LangGraph・OpenAI SDK・FastMCP などが固定版で含まれます。`(NVIDIA GPU)` の付いた構成は、CUDA 版の PyTorch と Transformers などを含む GPU 用イメージ `ghcr.io/cosmac-dev/ai-agent-seminar-devcontainer-gpu`（取得するサイズはおよそ 4 GB）を使用します。コンテナから GPU を使うには、ホストに NVIDIA のドライバーと、Docker から GPU を使う設定（Linux は NVIDIA Container Toolkit、Windows は Docker Desktop の WSL 2 バックエンド）が必要です。第14回は `uv.lock` で固定された依存を `session14/.venv` に、第16回は `session16/requirements.txt` のフレームワーク群を `session16/.venv` に分けて導入します。第17回は、共通イメージに含まれない OpenAI Agents SDK をコンテナの作成時に導入します。
 
 `.devcontainer` の設定により、環境変数は次のように引き継がれます。
 
@@ -212,7 +212,7 @@ VS Code を同じターミナルから起動することで、Dev Containers が
 
 `(NVIDIA GPU)` の付いた構成では、ホストで環境変数 `HF_HUB_CACHE` に Hugging Face のキャッシュの場所（既定は Linux・macOS が `~/.cache/huggingface/hub`、Windows が `%USERPROFILE%\.cache\huggingface\hub`）を設定すると、ホストにダウンロード済みのモデルをコンテナでも使えます。Docker のボリュームに置いたモデルも使えます。ボリュームは `ai-agent-seminar-hf-hub` を使い、ホストで環境変数 `HF_HUB_VOLUME` を設定すると別のボリュームを使います（モデルはボリュームの直下か `hub/` の下に置きます）。どちらも読み取り専用で使い、コンテナで新たにダウンロードしたモデルはコンテナを削除すると消えます。
 
-セッション別の構成では、そのセッションをワークスペースとして開き、パッケージを持つ回では `src` ディレクトリを `PYTHONPATH` に追加します。また、Python、Pylance、Jupyter の VS Code 拡張機能が自動的に導入されます。ノートブック冒頭のセットアップセルも実行してください。
+セッション別の構成では、そのセッションをワークスペースとして開き、パッケージを持つ回では `src` のパッケージを使えるようにします（`PYTHONPATH` への追加、またはコンテナの作成時のインストール）。また、Python、Pylance、Jupyter の VS Code 拡張機能が自動的に導入されます。ノートブック冒頭のセットアップセルも実行してください。
 
 ホストで API キーを設定していない場合は、ノートブックの入力欄から設定してください。環境変数を変更した後は、VS Code を起動し直して **Dev Containers: Rebuild Container** を実行します。
 
